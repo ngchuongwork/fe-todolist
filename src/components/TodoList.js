@@ -1,6 +1,7 @@
 ﻿import React from "react";
-import ReactDOM from "react-dom/client";
 import { useState } from "react";
+import Alert from 'react-bootstrap/Alert';
+
 
 function TodoList() {
     const [todos, setTodos] = useState([]);
@@ -43,90 +44,93 @@ function TodoList() {
     function handleOutUpdate(e) {
         const updatedId = e.target.id;
         setTodos((prevTodos) =>
-        prevTodos.map((todo) =>
-        todo.id == updatedId
-        ? { ...todo, border: "none", inactive: false }
-        : { ...todo, border: "none", inactive: true }
-        )
+            prevTodos.map((todo) =>
+                todo.id == updatedId
+                    ? { ...todo, border: "none", inactive: false }
+                    : { ...todo, border: "none", inactive: true }
+            )
         );
     }
     function onTypingTask(e) {
         const updatedId = e.target.id;
         setTodos((prevTodos) =>
-        prevTodos.map((todo) =>
-        todo.id == updatedId ? { ...todo, value: e.target.value } : todo
-        )
+            prevTodos.map((todo) =>
+                todo.id == updatedId ? { ...todo, value: e.target.value } : todo
+            )
         );
     }
     function doneTask(e) {
         const updatedId = e.target.id;
         const checked = e.target.checked;
-        
-        setTodos((prevTodos) =>
-        prevTodos.map((todo) =>
-        todo.id == updatedId && checked
-        ? { ...todo, textDecor: "line-through", isdone: checked }
-        : { ...todo, textDecor: "none", isdone: checked  }
-        ),
-        
-        );
-        
 
-        
+        setTodos((prevTodos) =>
+            prevTodos.map((todo) =>
+                todo.id == updatedId ?
+                    checked ?
+                        { ...todo, textDecor: "line-through", isdone: true } : { ...todo, textDecor: "none", isdone: false }
+                    : todo
+            ),
+        );
+
+
     }
 
     return (
-        <div style={{ margin: "0 auto", width: "800px",display: "flex" }}>
+        <div style={{ margin: "0 auto", width: "800px", display: "flex" }}>
             <div style={{ margin: "0 auto", width: "300px" }}>
-                <center><h1>Todo List</h1></center>
-            <form style={{ margin: "0 auto", width: "220px", display: "flex" }}>
-                <input style={{ width: "85%" }} type="text" value={inputValue} onChange={handleChange} />
-                <button style={{ width: "15%" }} onClick={handleSubmit}>Add</button>
-            </form>
-            <form>
-                <ul style={{ listStyle: "none" }}>
-                    {todos.map((todo) => (
-                        <li key={todo.id}>
-                            <input type="checkbox" id={todo.id} onChange={doneTask} />
-                            <input
-                                type="text"
-                                id={todo.id}
-                                onBlur={handleOutUpdate}
-                                onClick={handleEdit}
-                                onChange={onTypingTask}
-                                style={{ border: todo.border, textDecoration: todo.textDecor }}
-                                value={todo.value}
-                                readOnly={todo.inactive}
-                            />
-                            <button value={todo.id} type="button" onClick={handleDelete}>
-                                Delete
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            </form>
+                <center><h3>Todo List</h3></center>
+                <form style={{ margin: "0 auto", width: "220px", display: "flex" }}>
+                    <input style={{ width: "85%" }} type="text" value={inputValue} onChange={handleChange} />
+                    <button style={{ width: "15%" }} onClick={handleSubmit}>Add</button>
+                </form>
+                <form>
+                    <ul style={{ listStyle: "none" }}>
+                        {todos.map((todo) => (
+                             todo.isdone == false ?
+                                <li key={todo.id}>
+                                    <input type="checkbox"  checked={todo.isdone} id={todo.id} onChange={doneTask} />
+                                    <input
+                                        type="text"
+                                        id={todo.id}
+                                        onBlur={handleOutUpdate}
+                                        onClick={handleEdit}
+                                        onChange={onTypingTask}
+                                        style={{ border: todo.border, textDecoration: todo.textDecor }}
+                                        value={todo.value}
+                                        readOnly={todo.inactive}
+                                    />
+                                    <button value={todo.id} type="button" onClick={handleDelete}>
+                                        Delete
+                                    </button>
+                                </li>
+                            :""
+                        ))}
+                    </ul>
+                </form>
             </div>
             <form style={{ margin: "0 auto", width: "300px" }}>
-            <center><h1>Done List</h1></center>
-                
+                <center><h3>Done List</h3></center>
+
                 <ul style={{ listStyle: "none" }}>
-                    {todos.map((todo) => ( 
-                        <li key={todo.id}>
-                            <input type="checkbox" id={todo.id} onChange={doneTask} />
-                            <input
-                                type="text"
-                                id={todo.id}
-                                onBlur={handleOutUpdate}
-                                onClick={handleEdit}
-                                onChange={onTypingTask}
-                                style={{ border: todo.border, textDecoration: todo.textDecor }}
-                                value={todo.value}
-                                readOnly={todo.inactive}
-                            />
-                            <button value={todo.id} type="button" onClick={handleDelete}>
-                                Delete
-                            </button>
-                        </li>
+                    {todos.map((todo) => (
+                        todo.isdone == true ?
+                            <li key={todo.id}>
+                                <input type="checkbox" checked={todo.isdone} id={todo.id} onChange={doneTask} />
+                                <input
+                                    type="text"
+                                    id={todo.id}
+                                    onBlur={handleOutUpdate}
+                                    onClick={handleEdit}
+                                    onChange={onTypingTask}
+                                    style={{ border: todo.border, textDecoration: todo.textDecor }}
+                                    value={todo.value}
+                                    readOnly={todo.inactive}
+                                />
+                                <button value={todo.id} type="button" onClick={handleDelete}>
+                                    Delete
+                                </button>
+                            </li>
+                            : ""
                     ))}
                 </ul>
             </form>
